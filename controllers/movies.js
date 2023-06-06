@@ -1,73 +1,87 @@
-// test
 const Movie = require('../models/movies');
 
+const { DocumentNotFoundError, ValidationError, CastError } = require('mongoose').Error;
+
 const {
-  // CODE,
   CREATED_CODE,
-  // const ERROR_BAD_REQUEST_CODE = 400;
-  // ERROR_NOT_FOUND_CODE,
-  // const ERROR_SERVER_CODE = 500;
+  MOVIE_BAD_DATA_MSG,
+  MOVIE_FORBIDDEN_MSG,
+  MOVIE_DELETE_MSG,
+  MOVIE_DELETE_NOT_FOUND_MSG,
+  MOVIE_FIND_NOT_FOUND_MSG,
+  MOVIE_BAD_ID_MSG,
 } = require('../utils/utils');
 
 const Forbidden = require('../errors/Forbidden');
+const NotFound = require('../errors/NotFound');
+const BadRequest = require('../errors/BadRequest');
 
 //= =====================================================
 
 module.exports.getOwnMovies = (req, res, next) => {
   Movie.find({ owner: req.user._id })
     .then((cards) => res.send(cards))
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof DocumentNotFoundError) {
+        next(new NotFound(MOVIE_FIND_NOT_FOUND_MSG));
+      } else { next(err); }
+    });
 };
 //= =====================================================
 
 module.exports.createCardMovie = (req, res, next) => {
-  const { name, link } = req.body;
+  const {
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+  } = req.body;
   const ownerId = req.user._id;
-  Movie.create({ name, link, owner: ownerId })
-    // .then((card) => card.populate('owner'))
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    thumbnail,
+    movieId,
+    nameRU,
+    nameEN,
+    owner: ownerId,
+  })
     .then((card) => res.status(CREATED_CODE).send(card))
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof ValidationError) {
+        next(new BadRequest(MOVIE_BAD_DATA_MSG));
+      } else { next(err); }
+    });
 };
 
-//= =====================================================
-
-const upLikes = (req, res, upData, next) => {
-  Movie.findByIdAndUpdate(req.params.cardId, upData, { new: true })
-    .orFail()
-    /* .populate('likes')
-    .populate('owner') */
-    .then((card) => res.send(card))
-    .catch(next);
-};
-//= =====================================================
-
-module.exports.addLike = (req, res, next) => {
-  // const ownerId = req.user._id;
-  const newData = { $addToSet: { likes: req.user._id } };
-  upLikes(req, res, newData, next);
-};
-//= =====================================================
-
-module.exports.removeLike = (req, res, next) => {
-  // const ownerId = req.user._id;
-  const newData = { $pull: { likes: req.user._id } };
-  upLikes(req, res, newData, next);
-};
 //= =====================================================
 
 module.exports.deleteCardMovie = (req, res, next) => {
   Movie.findById(req.params.cardId)
     .orFail()
     .then((card) => {
-      Movie.deleteOne({ _id: card._id, owner: req.user._id })
-        .then((result) => {
-          if (result.deletedCount === 0) {
-            throw new Forbidden(`Пользователь с id ${req.user._id} не добавлял карточку с id ${req.params.cardId}`);
-          } else {
-            res.send({ message: 'Удалено' });
-          }
-        })
-        .catch(next);
+      if (card.owner.toString() === req.user._id) {
+        card.deleteOne();
+        res.send({ message: MOVIE_DELETE_MSG});
+      } else { throw new Forbidden(MOVIE_FORBIDDEN_MSG); }
     })
-    .catch(next);
+    .catch((err) => {
+      if (err instanceof DocumentNotFoundError) {
+        next(new NotFound(MOVIE_DELETE_NOT_FOUND_MSG));
+      } else if (err instanceof CastError) {
+        next(new BadRequest(MOVIE_BAD_ID_MSG));
+      } else { next(err); }
+    });
 };
