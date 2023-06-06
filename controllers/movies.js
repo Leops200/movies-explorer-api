@@ -1,6 +1,6 @@
-const Movie = require('../models/movies');
-
 const { DocumentNotFoundError, ValidationError, CastError } = require('mongoose').Error;
+
+const Movie = require('../models/movies');
 
 const {
   CREATED_CODE,
@@ -74,7 +74,7 @@ module.exports.deleteCardMovie = (req, res, next) => {
     .then((card) => {
       if (card.owner.toString() === req.user._id) {
         card.deleteOne();
-        res.send({ message: MOVIE_DELETE_MSG});
+        res.send({ message: MOVIE_DELETE_MSG });
       } else { throw new Forbidden(MOVIE_FORBIDDEN_MSG); }
     })
     .catch((err) => {

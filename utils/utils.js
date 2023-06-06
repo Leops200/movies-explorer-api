@@ -8,13 +8,13 @@ const ERROR_NOT_FOUND_CODE = 404;
 const ERROR_CONFLICT_CODE = 409;
 const ERROR_SERVER_CODE = 500;
 
-// === Сообщения об oшибках ===
-const MOVIE_DELETE_MSG = 'Фильм удалён';
+// === Сообщения об обрабатываемых oшибках ===
 const MOVIE_BAD_DATA_MSG = 'Hекорректные данные для создания карточки';
 const MOVIE_FORBIDDEN_MSG = 'Недостаточно прав. Карточка другого пользователя';
 const MOVIE_DELETE_NOT_FOUND_MSG = 'Карточка с таким ID не найдена';
 const MOVIE_FIND_NOT_FOUND_MSG = 'Не найдены карточки пользователя';
 const MOVIE_BAD_ID_MSG = 'Некорректный ID карточки';
+const MOVIE_DELETE_MSG = 'Фильм удалён';
 const URL_NOT_FOUND_MSG = 'Несуществующий URL';
 const USER_NOT_FOUND_MSG = 'Пользователь с таким ID не найден';
 const USER_BAD_ID_MSG = 'Некорректный ID пользователя';
