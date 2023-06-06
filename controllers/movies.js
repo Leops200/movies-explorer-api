@@ -1,5 +1,5 @@
 // test
-const Card = require('../models/card');
+const Movie = require('../models/movies');
 
 const {
   // CODE,
@@ -13,18 +13,17 @@ const Forbidden = require('../errors/Forbidden');
 
 //= =====================================================
 
-module.exports.getAllCards = (req, res, next) => {
-  Card.find({})
-    // .populate(['owner', 'likes'])
+module.exports.getOwnMovies = (req, res, next) => {
+  Movie.find({ owner: req.user._id })
     .then((cards) => res.send(cards))
     .catch(next);
 };
 //= =====================================================
 
-module.exports.createCards = (req, res, next) => {
+module.exports.createCardMovie = (req, res, next) => {
   const { name, link } = req.body;
   const ownerId = req.user._id;
-  Card.create({ name, link, owner: ownerId })
+  Movie.create({ name, link, owner: ownerId })
     // .then((card) => card.populate('owner'))
     .then((card) => res.status(CREATED_CODE).send(card))
     .catch(next);
@@ -33,7 +32,7 @@ module.exports.createCards = (req, res, next) => {
 //= =====================================================
 
 const upLikes = (req, res, upData, next) => {
-  Card.findByIdAndUpdate(req.params.cardId, upData, { new: true })
+  Movie.findByIdAndUpdate(req.params.cardId, upData, { new: true })
     .orFail()
     /* .populate('likes')
     .populate('owner') */
@@ -56,11 +55,11 @@ module.exports.removeLike = (req, res, next) => {
 };
 //= =====================================================
 
-module.exports.deleteCards = (req, res, next) => {
-  Card.findById(req.params.cardId)
+module.exports.deleteCardMovie = (req, res, next) => {
+  Movie.findById(req.params.cardId)
     .orFail()
     .then((card) => {
-      Card.deleteOne({ _id: card._id, owner: req.user._id })
+      Movie.deleteOne({ _id: card._id, owner: req.user._id })
         .then((result) => {
           if (result.deletedCount === 0) {
             throw new Forbidden(`Пользователь с id ${req.user._id} не добавлял карточку с id ${req.params.cardId}`);
