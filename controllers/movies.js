@@ -4,12 +4,12 @@ const Movie = require('../models/movies');
 
 const {
   CREATED_CODE,
+  MOVIE_BAD_ID_MSG,
+  MOVIE_DELETE_MSG,
   MOVIE_BAD_DATA_MSG,
   MOVIE_FORBIDDEN_MSG,
-  MOVIE_DELETE_MSG,
-  MOVIE_DELETE_NOT_FOUND_MSG,
   MOVIE_FIND_NOT_FOUND_MSG,
-  MOVIE_BAD_ID_MSG,
+  MOVIE_DELETE_NOT_FOUND_MSG,
 } = require('../utils/utils');
 
 const Forbidden = require('../errors/Forbidden');
@@ -31,17 +31,8 @@ module.exports.getOwnMovies = (req, res, next) => {
 
 module.exports.createCardMovie = (req, res, next) => {
   const {
-    country,
-    director,
-    duration,
-    year,
-    description,
-    image,
-    trailerLink,
-    thumbnail,
-    movieId,
-    nameRU,
-    nameEN,
+    country, director, duration, year, description,
+    image, trailerLink, thumbnail, movieId, nameRU, nameEN,
   } = req.body;
   const ownerId = req.user._id;
   Movie.create({
