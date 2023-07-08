@@ -13,8 +13,8 @@ const rateLimiter = require('./middlewares/rateLimiter');
 
 // =====================================================
 
-const PORT = process.env.PORT || 3001;
-const DATA_BASE = process.env.DATA_BASE || 'mongodb://127.0.0.1/mestodb';
+const PORT = process.env.PORT || 3000;
+const DATA_BASE = process.env.DATA_BASE || 'mongodb://127.0.0.1/bitfilmsdb';
 
 const app = express();
 
