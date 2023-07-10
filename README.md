@@ -13,4 +13,4 @@
 
 -[Ссылка на репозиторий](https://github.com/Leops200/movies-explorer-api.git)
 -[Ссылка на сервер](http://api.diploma.dev.nomoredomains.rocks)
-IP: 130.193.34.163
+IP: 158.160.74.43
