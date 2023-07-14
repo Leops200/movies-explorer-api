@@ -1,6 +1,6 @@
 const allowedCors = [
-  'https://diploma.dev.nomoreparties.sbs',
-  'http://diploma.dev.nomoreparties.sbs',
+  'https://l-energy.dev.nomoredomains.xyz',
+  'http://l-energy.dev.nomoredomains.xyz',
   'http://localhost:3000',
   'http://localhost:3001',
   'http://localhost:3002',
